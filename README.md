@@ -19,6 +19,12 @@ Codepush server go is compatible with [react-native-code-push](https://github.co
 - GCP Bucket (Google Cloud Storage)
 - FTP
 
+### GCS access permissions
+
+A service account token with the IAM permission "Storage Object User" is needed to access the Google Cloud Storage bucket.
+
+The service account token has to be exported and the path to the JSON file has to be provided via the config file.
+
 ## Before installation, please ensure that the following procedures have been installed
 
 - mysql
