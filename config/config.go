@@ -82,6 +82,7 @@ type codePush struct {
 	FileLocal string
 	Local     localConfig
 	Aws       awsConfig
+	Gcp       gcpConfig
 	Ftp       ftpConfig
 }
 type awsConfig struct {
@@ -92,6 +93,12 @@ type awsConfig struct {
 	Secret           string
 	Bucket           string
 }
+type gcpConfig struct {
+	Bucket           	string
+	Object           	string
+	ServiceAccountJSON	string
+}
+
 type ftpConfig struct {
 	ServerUrl string
 	UserName  string

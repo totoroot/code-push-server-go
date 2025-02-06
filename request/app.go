@@ -2,10 +2,13 @@ package request
 
 import (
 	"bytes"
+	"context"
+	"io"
 	"log"
 	"net/http"
 	"os"
 
+	"cloud.google.com/go/storage"
 	"com.lc.go.codepush/server/config"
 	"com.lc.go.codepush/server/db"
 	"com.lc.go.codepush/server/db/redis"
@@ -20,6 +23,8 @@ import (
 	"github.com/gin-gonic/gin/binding"
 	"github.com/google/uuid"
 	"github.com/jlaffaye/ftp"
+	"golang.org/x/oauth2/google"
+	"google.golang.org/api/option"
 	"gorm.io/gorm"
 )
 
@@ -215,6 +220,37 @@ func (App) UploadBundle(ctx *gin.Context) {
 			Key:    &key,
 		})
 		if err != nil {
+			log.Panic(err.Error())
+		}
+	case "gcp":
+		ctx := context.Background()
+
+		credJSON, err := os.ReadFile(config.CodePush.Gcp.ServiceAccountJSON)
+		if err != nil {
+			log.Panic(err.Error())
+		}
+		creds, err := google.CredentialsFromJSON(ctx, []byte(credJSON), storage.ScopeFullControl)
+		if err != nil {
+			log.Panic(err.Error())
+		}
+
+		client, err := storage.NewClient(ctx, option.WithCredentials(creds))
+		if err != nil {
+			log.Panic(err.Error())
+			// Ensure the client is closed when failed
+			defer client.Close()
+		}
+
+		bucketName := config.CodePush.Gcp.Bucket
+		bucket := client.Bucket(bucketName)
+		obj := bucket.Object(config.CodePush.Gcp.Object)
+
+		writer := obj.NewWriter(ctx)
+		if _, err := io.Copy(writer, file); err != nil {
+			log.Panic(err.Error())
+		}
+
+		if err := writer.Close(); err != nil {
 			log.Panic(err.Error())
 		}
 	case "ftp":

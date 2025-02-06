@@ -11,7 +11,8 @@ Codepush server go is compatible with [react-native-code-push](https://github.co
 
 ## Support storage
 - Local
-- AWS S3 
+- AWS S3
+- GCP Bucket (Google Cloud Storage)
 - FTP
 
 ## Before installation, please ensure that the following procedures have been installed
@@ -28,7 +29,7 @@ import code-push.sql to mysql
 ### Configuration mysql,redis,storage
 ``` shell
 cd config
-vi (app.json or app.dev.json or app.prod.json) 
+vi (app.json or app.dev.json or app.prod.json)
 # app.json
 {
     "mode":"prod" #run read config app.{mode}.json
@@ -55,7 +56,7 @@ vi (app.json or app.dev.json or app.prod.json)
         "Password": ""
     },
     "CodePush": {
-        "FileLocal":(local,aws,ftp),
+        "FileLocal":(local,aws,gcp,ftp),
         "Local":{
             "SavePath":"./bundles"
         },
@@ -66,6 +67,11 @@ vi (app.json or app.dev.json or app.prod.json)
             "KeyId":"",
             "Secret":"",
             "Bucket":""
+        },
+        "Gcp":{
+            "Bucket":"",
+            "Object":"",
+            "ServiceAccountJSON": ""
         },
         "Ftp":{
             "ServerUrl":"",
@@ -90,7 +96,7 @@ set GOARCH=amd64
 set GOOS=linux #windows,darwin
 go build -o code-push-server-go(.exe) main.go
 
-#copy config/app.(model).json and config/app.json to run dir 
+#copy config/app.(model).json and config/app.json to run dir
 
 #Linux server
 chmod +x code-push-server-go

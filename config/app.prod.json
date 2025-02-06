@@ -19,7 +19,7 @@
         "Password": ""
     },
     "CodePush": {
-        "FileLocal":"local",
+        "FileLocal":"gcp",
         "Local":{
             "SavePath":"./bundles"
         },
@@ -30,6 +30,12 @@
             "KeyId":"",
             "Secret":"",
             "Bucket":""
+        },
+
+        "Gcp":{
+            "Bucket":"",
+            "Object":"",
+            "ServiceAccountJSON": ""
         },
         "Ftp":{
             "ServerUrl":"",
